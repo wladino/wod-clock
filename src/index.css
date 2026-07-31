@@ -35,11 +35,12 @@ button, a{ touch-action:manipulation; }
 .field-row span{ width:78px; text-align:right; }
 .field-row span.unit{ width:auto; text-align:left; }
 .field-row input{
-  width:80px; height:48px; border-radius:4px; border:none;
+  width:80px; height:48px; border-radius:4px; border:1px solid transparent;
   background:var(--fg); color:var(--bg);
   font-family:'Geist Mono'; font-weight:600; font-size:24px; text-align:center;
   appearance:textfield;
 }
+.field-row input.invalid{ border-color:var(--red); }
 .field-row input::-webkit-outer-spin-button,
 .field-row input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
 

@@ -9,10 +9,10 @@ const DEFAULTS = { rounds: 8, work: 20, rest: 10 };
 
 export default function Tabata() {
   const [settings, setSettings] = useState({ ...DEFAULTS, ...loadSettings(MODE) });
+  const [errors, setErrors] = useState({});
   const w = useWorkoutRunner();
 
-  function updateField(key, min, val) {
-    const n = Math.max(min, parseInt(val, 10) || 0);
+  function updateField(key, n) {
     setSettings((s) => ({ ...s, [key]: n }));
   }
 
@@ -31,6 +31,13 @@ export default function Tabata() {
   }
 
   function handleStart() {
+    const nextErrors = {};
+    ['rounds', 'work', 'rest'].forEach((key) => {
+      if (settings[key] === '') nextErrors[key] = true;
+    });
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
     saveSettings(MODE, settings);
     w.start(() => sequence(1, 'work'));
   }
@@ -44,9 +51,9 @@ export default function Tabata() {
       setup={
         <>
           <div className="setup-fields">
-            <SetupField pre="FOR" unit="ROUNDS" min={1} value={settings.rounds} onChange={(v) => updateField('rounds', 1, v)} />
-            <SetupField pre="WORK" unit="SECONDS" min={1} value={settings.work} onChange={(v) => updateField('work', 1, v)} />
-            <SetupField pre="REST" unit="SECONDS" min={0} value={settings.rest} onChange={(v) => updateField('rest', 0, v)} />
+            <SetupField pre="FOR" unit="ROUNDS" min={1} value={settings.rounds} invalid={errors.rounds} onChange={(n) => updateField('rounds', n)} />
+            <SetupField pre="WORK" unit="SECONDS" min={1} value={settings.work} invalid={errors.work} onChange={(n) => updateField('work', n)} />
+            <SetupField pre="REST" unit="SECONDS" min={0} value={settings.rest} invalid={errors.rest} onChange={(n) => updateField('rest', n)} />
           </div>
           <button className="start-btn" onClick={handleStart}>START</button>
         </>

@@ -9,11 +9,10 @@ const DEFAULTS = { every_min: 1, every_sec: 0, rounds: 10, rest: 0 };
 
 export default function Emom() {
   const [settings, setSettings] = useState({ ...DEFAULTS, ...loadSettings(MODE) });
+  const [errors, setErrors] = useState({});
   const w = useWorkoutRunner();
 
-  function updateField(key, min, max, val) {
-    let n = Math.max(min, parseInt(val, 10) || 0);
-    if (max !== undefined) n = Math.min(max, n);
+  function updateField(key, n) {
     setSettings((s) => ({ ...s, [key]: n }));
   }
 
@@ -35,6 +34,13 @@ export default function Emom() {
   }
 
   function handleStart() {
+    const nextErrors = {};
+    ['every_min', 'every_sec', 'rounds', 'rest'].forEach((key) => {
+      if (settings[key] === '') nextErrors[key] = true;
+    });
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
     saveSettings(MODE, settings);
     w.start(() => sequence(1, 'work'));
   }
@@ -48,10 +54,10 @@ export default function Emom() {
       setup={
         <>
           <div className="setup-fields">
-            <SetupField pre="EVERY" unit="MINUTES" min={0} value={settings.every_min} onChange={(v) => updateField('every_min', 0, undefined, v)} />
-            <SetupField pre="AND" unit="SECONDS" min={0} max={59} value={settings.every_sec} onChange={(v) => updateField('every_sec', 0, 59, v)} />
-            <SetupField pre="FOR" unit="ROUNDS" min={1} value={settings.rounds} onChange={(v) => updateField('rounds', 1, undefined, v)} />
-            <SetupField pre="REST" unit="SECONDS" min={0} value={settings.rest} onChange={(v) => updateField('rest', 0, undefined, v)} />
+            <SetupField pre="EVERY" unit="MINUTES" min={0} value={settings.every_min} invalid={errors.every_min} onChange={(n) => updateField('every_min', n)} />
+            <SetupField pre="AND" unit="SECONDS" min={0} max={59} value={settings.every_sec} invalid={errors.every_sec} onChange={(n) => updateField('every_sec', n)} />
+            <SetupField pre="FOR" unit="ROUNDS" min={1} value={settings.rounds} invalid={errors.rounds} onChange={(n) => updateField('rounds', n)} />
+            <SetupField pre="REST" unit="SECONDS" min={0} value={settings.rest} invalid={errors.rest} onChange={(n) => updateField('rest', n)} />
           </div>
           <button className="start-btn" onClick={handleStart}>START</button>
         </>

@@ -9,14 +9,20 @@ const DEFAULTS = { minutes: 10 };
 
 export default function ForTime() {
   const [settings, setSettings] = useState({ ...DEFAULTS, ...loadSettings(MODE) });
+  const [errors, setErrors] = useState({});
   const w = useWorkoutRunner();
 
-  function updateField(val) {
-    const n = Math.max(1, parseInt(val, 10) || 0);
+  function updateField(n) {
     setSettings((s) => ({ ...s, minutes: n }));
   }
 
   function handleStart() {
+    if (settings.minutes === '') {
+      setErrors({ minutes: true });
+      return;
+    }
+    setErrors({});
+
     saveSettings(MODE, settings);
     // counts up from 0:00; auto-completes when elapsed hits the minute cap
     w.start(() => w.runSingle(settings.minutes * 60, 'up', () => w.finish()));
@@ -29,7 +35,7 @@ export default function ForTime() {
       setup={
         <>
           <div className="setup-fields">
-            <SetupField pre="FOR" unit="MINUTES" min={1} value={settings.minutes} onChange={updateField} />
+            <SetupField pre="FOR" unit="MINUTES" min={1} value={settings.minutes} invalid={errors.minutes} onChange={updateField} />
           </div>
           <button className="start-btn" onClick={handleStart}>START</button>
         </>
