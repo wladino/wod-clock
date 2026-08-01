@@ -51,6 +51,19 @@ button, a{ touch-action:manipulation; }
 }
 .start-btn:hover{ background:#1ea34c; }
 
+.toggle-row{ display:flex; align-items:center; gap:12px; font-size:16px; font-weight:500; cursor:pointer; }
+.toggle-input{ position:absolute; opacity:0; width:0; height:0; }
+.toggle-track{
+  width:44px; height:26px; border-radius:13px; background:var(--fg); opacity:0.35;
+  position:relative; flex-shrink:0; transition:background-color 0.15s ease, opacity 0.15s ease;
+}
+.toggle-thumb{
+  position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%;
+  background:var(--bg); transition:transform 0.15s ease;
+}
+.toggle-input:checked + .toggle-track{ background:var(--green); opacity:1; }
+.toggle-input:checked + .toggle-track .toggle-thumb{ transform:translateX(18px); }
+
 .round{ font-family:'Archivo'; font-weight:800; font-size:72px; color:var(--red); line-height:1; }
 .round.resting{ color:var(--orange); }
 .phase-label{ font-family:'Geist Mono'; font-weight:600; font-size:20px; letter-spacing:3px; opacity:0.8; }

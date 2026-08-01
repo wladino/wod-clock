@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { runPhaseTimer, alertPulse } from './timer';
+import { unlockAudio } from './sound';
 
 // Shared plumbing for every clock page: pre-start countdown, wake lock,
 // the running clock/round state, and cleanup when the page unmounts
@@ -54,6 +55,7 @@ export default function useWorkoutRunner() {
 
   // 10s pre-start countdown (last 3s in red + vibrate + flicker), then onGo() runs the mode's sequence
   function start(onGo) {
+    unlockAudio();
     requestWakeLock();
     setScreen('countdown');
     setCountdownN(10);

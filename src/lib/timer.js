@@ -1,3 +1,6 @@
+import { loadSoundEnabled } from './storage';
+import { beep } from './sound';
+
 // One small rAF-driven timer, reused by the pre-start countdown and every
 // mode's work/rest/count-up/count-down clock. Driven off elapsed wall-clock
 // time (not tick counting) so it can't drift over a long AMRAP/FOR TIME.
@@ -32,6 +35,7 @@ export function runPhaseTimer(durationSec, direction, onTick, onDone) {
 // touches audio, so it can't interrupt Spotify/music playing in the background.
 export function alertPulse(isCompletion) {
   if (navigator.vibrate) navigator.vibrate(isCompletion ? [200, 80, 200, 80, 200] : 150);
+  if (loadSoundEnabled()) beep(isCompletion);
   document.body.classList.add('flip');
   setTimeout(() => document.body.classList.remove('flip'), isCompletion ? 200 : 120);
 }
