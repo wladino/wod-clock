@@ -14,6 +14,8 @@ A minimal, distraction-free workout timer for the four classic CrossFit/HIIT for
 - Screen Wake Lock so the display doesn't sleep mid-workout
 - Installable as a PWA (works offline via a service worker) with light/dark aware theming
 - Share button to quickly send the app to a training partner
+- Optional **sound notification** toggle (off by default) — beeps on the final 3 seconds of every countdown and on workout completion, alongside the existing vibration/flicker alert
+- Setup field validation — empty fields are blocked from starting a workout and outlined in red
 - Settings (rounds, work/rest durations, etc.) are remembered per mode via `localStorage`
 
 ## Tech stack
@@ -44,7 +46,7 @@ npm run preview
 src/
   pages/            One page per workout mode (Home, Tabata, ForTime, Emom, Amrap)
   components/       Shared UI (Screen, WorkoutScreens, SetupField)
-  lib/               Timer engine, workout runner hook, settings storage
+  lib/               Timer engine, workout runner hook, settings storage, sound alerts
 public/              PWA manifest, service worker, icons
 ```
 
