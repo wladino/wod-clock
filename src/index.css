@@ -1,5 +1,20 @@
-:root{ --bg:#1e1e1e; --fg:#dcdcdc; --green:#22c55e; --red:#ef4444; --orange:#F59E0B;}
-body.flip{ --bg:#dcdcdc; --fg:#1e1e1e; }
+:root, :root[data-theme="dark"]{
+  --bg:#1e1e1e; --fg:#dcdcdc;
+  --green:#22c55e; --red:#ef4444; --orange:#F59E0B;
+  --green-status:var(--green); --red-status:var(--red); --orange-status:var(--orange);
+}
+:root[data-theme="light"]{
+  --bg:#dcdcdc; --fg:#1e1e1e;
+  --green-status:#15803d; --red-status:#b91c1c; --orange-status:#b45309;
+}
+:root:not([data-theme="light"]) body.flip{
+  --bg:#dcdcdc; --fg:#1e1e1e;
+  --green-status:#15803d; --red-status:#b91c1c; --orange-status:#b45309;
+}
+:root[data-theme="light"] body.flip{
+  --bg:#1e1e1e; --fg:#dcdcdc;
+  --green-status:#22c55e; --red-status:#ef4444; --orange-status:#F59E0B;
+}
 *{ box-sizing:border-box; }
 html,body,#root{ margin:0; height:100%; overscroll-behavior:none; }
 body{
@@ -64,11 +79,17 @@ button, a{ touch-action:manipulation; }
 .toggle-input:checked + .toggle-track{ background:var(--green); opacity:1; }
 .toggle-input:checked + .toggle-track .toggle-thumb{ transform:translateX(18px); }
 
-.round{ font-family:'Archivo'; font-weight:800; font-size:72px; color:var(--red); line-height:1; }
-.round.resting{ color:var(--orange); }
+.app-header-bar{
+  position:fixed; top:0; right:0; z-index:100;
+  padding:calc(12px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 12px 16px;
+}
+.theme-toggle{ gap:8px; font-size:14px; }
+
+.round{ font-family:'Archivo'; font-weight:800; font-size:72px; color:var(--red-status); line-height:1; }
+.round.resting{ color:var(--orange-status); }
 .phase-label{ font-family:'Geist Mono'; font-weight:600; font-size:20px; letter-spacing:3px; opacity:0.8; }
 .clock{ font-family:'Archivo'; font-weight:800; font-size:96px; line-height:1; }
-.clock.alert{ color:var(--red); }
+.clock.alert{ color:var(--red-status); }
 .countdown-num{ font-family:'Archivo'; font-weight:800; font-size:140px; line-height:1; }
-.countdown-num.alert{ color:var(--red); }
-.completed{ font-family:'Archivo'; font-weight:800; font-size:48px; color:var(--green); text-align:center; line-height:1.25; }
+.countdown-num.alert{ color:var(--red-status); }
+.completed{ font-family:'Archivo'; font-weight:800; font-size:48px; color:var(--green-status); text-align:center; line-height:1.25; }

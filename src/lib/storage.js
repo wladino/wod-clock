@@ -21,3 +21,13 @@ export function loadSoundEnabled() {
 export function saveSoundEnabled(enabled) {
   localStorage.setItem(SOUND_KEY, enabled ? '1' : '0');
 }
+
+const THEME_KEY = 'wodclock:theme';
+
+export function loadTheme() {
+  return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark';
+}
+
+export function saveTheme(theme) {
+  localStorage.setItem(THEME_KEY, theme);
+}

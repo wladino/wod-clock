@@ -17,11 +17,14 @@ Four workout timer modes, each its own route: `/tabata`, `/fortime`, `/emom`, `/
 
 ## Decisions worth knowing before changing behavior
 
-**No sound, ever.** Alerts are vibration + a dark/light theme flicker only.
-This was deliberate: the user runs Spotify during workouts, and there's no
-reliable way for a web app to play a sound without interrupting/pausing
-background music on iOS Safari (platform limitation, not a bug). If audio
-alerts are ever added, flag this constraint again — don't just add a beep.
+**Sound is opt-in, off by default.** Alerts are vibration + a dark/light
+theme flicker by default. This was deliberate: the user runs Spotify during
+workouts, and there's no reliable way for a web app to play a sound without
+interrupting/pausing background music on iOS Safari (platform limitation,
+not a bug). A sound-notification toggle (`src/lib/sound.js`, `WorkoutScreens.jsx`)
+now exists as an opt-in extra, defaulting to off — if you touch alert
+behavior, keep vibration + flicker as the always-on baseline and don't make
+sound load-bearing for the alert to be noticeable.
 
 **Alert timing.** Every countdown segment (10s pre-start, each work/rest
 phase, FOR TIME approaching its cap, AMRAP counting down) flashes red +
@@ -45,9 +48,32 @@ setup screen with the previously-used values (via localStorage,
 `wodclock:<mode>`). BACK always exits to the home screen.
 
 **Design tokens**, pulled from Figma variables, not guessed:
-`--dark-theme-bg:#1e1e1e`, `--light-theme-bg:#dcdcdc` (the flicker swaps
-between these), `--green:#22c55e` (status/success), `--red:#ef4444`
-(status/danger). Fonts: Archivo ExtraBold (headings/digits/round counter),
+`--bg`/`--fg` swap between dark (`#1e1e1e`/`#dcdcdc`, the default) and light
+(`#dcdcdc`/`#1e1e1e`) via a `data-theme="light"|"dark"` attribute on
+`<html>`, set from `App.jsx` and persisted to `localStorage` under
+`wodclock:theme` (`src/lib/storage.js`'s `loadTheme`/`saveTheme`). Dark is
+the implicit default (no regression for existing users). The transient
+vibrate/flicker alert (`body.flip` in `src/lib/timer.js`'s `alertPulse`)
+flashes to whichever theme *isn't* currently active, so it still reads as
+an interruption in either mode.
+
+`--green:#22c55e` / `--red:#ef4444` / `--orange:#F59E0B` are fixed brand
+fills (buttons, filled toggle pill) — same hex in both themes, so
+`.start-btn` never looks muted. Large bold text/status uses instead go
+through `--green-status`/`--red-status`/`--orange-status`, which equal the
+base tokens in dark mode but switch to darker shades (`#15803d`/`#b91c1c`/
+`#b45309`) in light mode to clear WCAG contrast against the light `#dcdcdc`
+background. If you add a new large colored text element, use the
+`-status` token, not the base one.
+
+**Light/dark toggle** lives in a slim fixed header bar rendered once from
+`App.jsx` (top-right, `.app-header-bar`), not inside any per-mode page —
+this is the one piece of "global chrome" that intentionally sits outside
+the per-mode page separation described above, since `Home.jsx` has no
+header of its own to inject into. `src/components/ThemeToggle.jsx` renders
+the switch; don't duplicate a second toggle inside a page.
+
+Fonts: Archivo ExtraBold (headings/digits/round counter),
 Geist Mono (labels/inputs/buttons/footer) — both loaded from Google Fonts.
 
 ## Deploy

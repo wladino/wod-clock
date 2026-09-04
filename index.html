@@ -12,6 +12,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
 <title>Workout Clock</title>
+<script>
+  // Keep 'wodclock:theme' in sync with THEME_KEY in src/lib/storage.js — this
+  // runs before any bundled module loads, so it can't import that constant.
+  var theme = localStorage.getItem('wodclock:theme') === 'light' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#dcdcdc' : '#1e1e1e');
+</script>
 </head>
 <body>
 <div id="root"></div>
