@@ -22,11 +22,14 @@ export default function WorkoutScreens({ label, runner, setup, showRound = false
     return (
       <Screen header={label} footer={<button className="link" onClick={goHome}>BACK</button>}>
         {setup}
-        <label className="toggle-row">
-          <input type="checkbox" className="toggle-input" checked={soundEnabled} onChange={toggleSound} />
-          <span className="toggle-track"><span className="toggle-thumb" /></span>
-          Sound notification
-        </label>
+        <div className="toggle-group">
+          <label className="toggle-row">
+            <input type="checkbox" className="toggle-input" checked={soundEnabled} onChange={toggleSound} />
+            <span className="toggle-track"><span className="toggle-thumb" /></span>
+            Sound notification
+          </label>
+          <p className="toggle-hint">Sound alerts may pause your music or other audio on your phone.</p>
+        </div>
       </Screen>
     );
   }
